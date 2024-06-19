@@ -56,6 +56,9 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
+
+# url
+$ http://localhost:3000/api      -->   for swagger
 ```
 
 ## Support
@@ -72,4 +75,4 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
-I have done documentation using swagger providing some images
+I have done documentation using swagger

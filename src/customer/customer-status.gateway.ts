@@ -1,27 +1,35 @@
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  SubscribeMessage,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  MessageBody,
+  ConnectedSocket,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway()
-export class CustomerStatusGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() 
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+  },
+})
+export class CustomerStatusGateway {
+  @WebSocketServer()
   server: Server;
 
-  handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
-  }
-
-  handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
+  @SubscribeMessage('joinRoom')
+  handleJoinRoom(
+    @MessageBody() room: string,
+    @ConnectedSocket() client: Socket,
+  ) {
+    client.join(room);
+    client.emit('joinedRoom', room);
   }
 
   notifyCustomer(requestId: number, status: string) {
-    this.server.emit(`requestStatus:${requestId}`, { status });
-  }
-
-  @SubscribeMessage('updateCustomerStatus')
-  handleUpdateCustomerStatus(client: Socket, payload: any) {
-    console.log('Received updateCustomerStatus event:', payload);
-
-    this.server.emit('customerStatusUpdated', payload);
+    this.server
+      .to(`request_${requestId}`)
+      .emit('requestStatus', { requestId, status });
   }
 }

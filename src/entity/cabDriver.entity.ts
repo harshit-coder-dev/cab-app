@@ -9,16 +9,19 @@ export class CabDriver {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone: string;
 
-  @Column('decimal', { precision: 10, scale: 6 ,nullable: true})
+  @Column({ nullable: true })
+  status: string;
+
+  @Column('decimal', { precision: 10, scale: 6, nullable: true })
   latitude: number;
 
-  @Column('decimal', { precision: 10, scale: 6 ,nullable: true})
+  @Column('decimal', { precision: 10, scale: 6, nullable: true })
   longitude: number;
 
   @OneToMany(() => CabRequest, (request) => request.cabDriver)

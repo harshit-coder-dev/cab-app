@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cab Request Status</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .status {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Cab Request Status</h1>
+        <div class="status">Connecting...</div>
+    </div>
+
+    <script>
+        const requestId = 1;
+        const socket = io('ws://localhost:3000');
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+            socket.emit('joinRoom', `request_${requestId}`);
+        });
+
+        socket.on('joinedRoom', (room) => {
+            console.log(`Joined room: ${room}`);
+            document.querySelector('.status').innerText = 'Waiting for updates...';
+        });
+
+        socket.on('requestStatus', (data) => {
+            console.log('Request Status:', data);
+            document.querySelector('.status').innerText = `Request ${data.requestId} is ${data.status}`;
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+            document.querySelector('.status').innerText = 'Disconnected';
+        });
+    </script>
+</body>
+
+</html>

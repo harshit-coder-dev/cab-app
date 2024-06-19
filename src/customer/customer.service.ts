@@ -17,10 +17,20 @@ export class CustomerService {
     private cabRequestRepo: Repository<CabRequest>,
     @InjectRepository(CabDriver)
     private cabDriver: Repository<CabDriver>,
-    private readonly customerStatusGateway: CustomerStatusGateway
+    private readonly customerStatusGateway: CustomerStatusGateway,
   ) {}
 
-  async addCustomer(request:CreateCustomerDto){
+  async findCustomerById(id: number) {
+    const customer = await this.customerRepo.findOne({
+      where: {
+        id,
+      },
+    });
+
+    return customer;
+  }
+
+  async addCustomer(request: CreateCustomerDto) {
     const customer = this.customerRepo.create(request);
     return this.customerRepo.save(customer);
   }
@@ -28,18 +38,20 @@ export class CustomerService {
   async requestCab(requestCabDto: RequestCabDto) {
     const customer = await this.customerRepo.findOne({
       where: {
-        id: requestCabDto.customerId
+        id: requestCabDto.customerId,
       },
     });
     if (!customer) {
       throw new NotFoundException('Customer not found');
     }
 
-    const driver = requestCabDto.driverId ? await this.cabDriver.findOne({
-      where: {
-        id: requestCabDto.driverId
-      },
-    }) : null;
+    const driver = requestCabDto.driverId
+      ? await this.cabDriver.findOne({
+          where: {
+            id: requestCabDto.driverId,
+          },
+        })
+      : null;
 
     if (requestCabDto.driverId && !driver) {
       throw new NotFoundException('Driver not found');
@@ -48,14 +60,13 @@ export class CustomerService {
     const request = this.cabRequestRepo.create({
       ...requestCabDto,
       customer: customer,
-      cabDriver:driver
+      cabDriver: driver,
     });
 
-    const savedRequest =await this.cabRequestRepo.save(request);
+    const savedRequest = await this.cabRequestRepo.save(request);
 
     this.customerStatusGateway.server.emit('newCabRequest', savedRequest);
 
     return savedRequest;
   }
-
 }

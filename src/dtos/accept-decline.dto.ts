@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {IsNotEmpty, IsNumber, IsPhoneNumber, IsString } from 'class-validator';
 
 export class AcceptDeclineDto {
   @IsNotEmpty()
@@ -12,4 +12,56 @@ export class AcceptDeclineDto {
   @IsNotEmpty()
   @IsString()
   status: string;
+}
+
+
+export class CreateCustomerDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  phone: string;
+}
+
+
+export class CreateDriverDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  phone: string;
+}
+
+export class CreateCabRequestDto {
+  @IsNotEmpty()
+  @IsNumber()
+  customerId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  pickupLatitude: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  pickupLongitude: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  dropoffLatitude: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  dropoffLongitude: number;
 }

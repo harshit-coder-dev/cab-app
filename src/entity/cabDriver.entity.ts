@@ -15,10 +15,10 @@ export class CabDriver {
   @Column()
   phone: string;
 
-  @Column('decimal', { precision: 10, scale: 6 })
+  @Column('decimal', { precision: 10, scale: 6 ,nullable: true})
   latitude: number;
 
-  @Column('decimal', { precision: 10, scale: 6 })
+  @Column('decimal', { precision: 10, scale: 6 ,nullable: true})
   longitude: number;
 
   @OneToMany(() => CabRequest, (request) => request.cabDriver)

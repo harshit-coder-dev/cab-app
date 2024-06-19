@@ -4,8 +4,6 @@ import { AppService } from './app.service';
 import { CustomerModule } from './customer/customer.module';
 import { DriverModule } from './cabDriver/cabDriver.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RequestStatusGateway } from './request-status/request-status.gateway';
-import { DriverGateway } from './driver/driver.gateway';
 
 @Module({
   imports: [
@@ -18,11 +16,12 @@ import { DriverGateway } from './driver/driver.gateway';
       database: 'cab_app',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      // logging:true
     }),
     CustomerModule,
     DriverModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RequestStatusGateway, DriverGateway],
+  providers: [AppService],
 })
 export class AppModule {}

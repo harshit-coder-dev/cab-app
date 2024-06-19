@@ -25,6 +25,6 @@ export class RequestCabDto {
   @IsNumber()
   customerId: number;
 
-  //   @IsNumber()
-  //   driverId?: number;
+  @IsNumber()
+  driverId?: number;
 }

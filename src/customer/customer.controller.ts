@@ -7,14 +7,19 @@ import {
 } from '@nestjs/common';
 import { RequestCabDto } from 'src/dtos/request-cab.dto';
 import { CustomerService } from './customer.service';
+import { CreateCustomerDto } from 'src/dtos/accept-decline.dto';
 
 @Controller('customer')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Post('request-cab')
-  @UsePipes(new ValidationPipe({ transform: true }))
   async requestCab(@Body() requestCabDto: RequestCabDto) {
     return this.customerService.requestCab(requestCabDto);
+  }
+
+  @Post('add')
+  async addCustomer(@Body() createCustomerDto: CreateCustomerDto) {
+    return this.customerService.addCustomer(createCustomerDto);
   }
 }
